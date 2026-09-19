@@ -8,7 +8,9 @@ services:
     environment:
       # O bot manda isso no cabeçalho x-api-key. Defina antes de subir.
       RENDER_API_KEY: ${RENDER_API_KEY:?defina RENDER_API_KEY}
-      RENDER_ORIGIN: http://127.0.0.1:3000
+      # O Chrome usa http://127.0.0.1:$PORT por dentro; descomente só se o
+      # servidor escutar em outro endereço.
+      # RENDER_ORIGIN: http://127.0.0.1:3000
     restart: unless-stopped
     # O Chromium precisa de mais memória compartilhada que os 64MB padrão do Docker.
     shm_size: 512mb

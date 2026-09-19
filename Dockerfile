@@ -17,8 +17,8 @@ RUN bun run build
 FROM base AS runtime
 ENV NODE_ENV=production
 ENV PORT=3000
-# Chrome loads the render page from inside the container, not via the domain.
-ENV RENDER_ORIGIN=http://127.0.0.1:3000
+# Chrome loads the render page from inside the container (127.0.0.1:$PORT),
+# not through the public domain. Set RENDER_ORIGIN only to override that.
 # Playwright's own Chromium; `chrome` only exists on the dev machine.
 ENV CHROME_CHANNEL=""
 COPY --from=deps /app/node_modules ./node_modules
