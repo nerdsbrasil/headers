@@ -1,12 +1,14 @@
 services:
   headers:
     build: .
+    # Porta na VPS (host) → porta dentro do container. O Next continua na 3000
+    # lá dentro, que é o endereço que o Chrome usa para fotografar a página.
     ports:
-      - "3000:3000"
+      - "${PORT:-2828}:3000"
     environment:
-      # The bot sends this as the x-api-key header. Change it before deploying.
+      # O bot manda isso no cabeçalho x-api-key. Defina antes de subir.
       RENDER_API_KEY: ${RENDER_API_KEY:?defina RENDER_API_KEY}
       RENDER_ORIGIN: http://127.0.0.1:3000
     restart: unless-stopped
-    # Chromium needs more shared memory than Docker's 64MB default.
+    # O Chromium precisa de mais memória compartilhada que os 64MB padrão do Docker.
     shm_size: 512mb

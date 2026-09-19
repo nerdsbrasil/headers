@@ -86,13 +86,27 @@ permissões de enviar mensagens e anexar arquivos no canal.
 
 A imagem é baseada na do Playwright, que já traz o Chromium.
 
+Crie um `.env` ao lado do `docker-compose.yml` (ele não vai para o Git) e suba:
+
 ```bash
-RENDER_API_KEY=uma-chave-secreta docker compose up -d --build
+cat > .env <<EOF
+RENDER_API_KEY=$(openssl rand -hex 32)
+PORT=2828
+EOF
+
+docker compose up -d --build
 ```
+
+A API fica em **`http://SEU-IP:2828`**; dentro do container o Next continua na 3000.
+Para trocar a porta, mude `PORT` no `.env` e rode `docker compose up -d`.
+
+O `.env` também serve para `docker compose ps|logs|down`, que reclamam se a
+`RENDER_API_KEY` não estiver definida.
 
 | Variável | Para quê |
 | --- | --- |
-| `RENDER_API_KEY` | chave que o bot envia; sem ela a API fica aberta |
+| `RENDER_API_KEY` | chave que o bot envia em `x-api-key`; sem ela a API responde a qualquer um |
+| `PORT` | porta publicada na VPS (padrão `2828`) |
 | `RENDER_ORIGIN` | de onde o Chrome carrega a página (padrão `http://127.0.0.1:3000`, o próprio container) |
 | `CHROME_CHANNEL` | vazio usa o Chromium do Playwright; `chrome` usa o Chrome instalado (é o padrão no `bun dev`) |
 
