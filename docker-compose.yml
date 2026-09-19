@@ -1,0 +1,12 @@
+services:
+  headers:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      # The bot sends this as the x-api-key header. Change it before deploying.
+      RENDER_API_KEY: ${RENDER_API_KEY:?defina RENDER_API_KEY}
+      RENDER_ORIGIN: http://127.0.0.1:3000
+    restart: unless-stopped
+    # Chromium needs more shared memory than Docker's 64MB default.
+    shm_size: 512mb
