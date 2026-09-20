@@ -38,7 +38,7 @@ GET /api/render/<header>?<params>   →  image/png
 | | |
 | --- | --- |
 | Autenticação | cabeçalho `x-api-key` (ou `?key=`) igual a `RENDER_API_KEY`. A chave local fica em `.env.local`, que não vai para o Git. |
-| Tamanho | `?size=1200x600` (padrão e único tamanho oficial hoje) |
+| Tamanho | `?size=<WxH>`; cada header declara os seus (o padrão é 1200x600) |
 | Erros | JSON com `error`; 401 chave, 400 parâmetro inválido, 404 header inexistente |
 | Headers disponíveis | `GET /api/headers` (só os com `api: true` são servidos) |
 
@@ -107,7 +107,7 @@ O `.env` também serve para `docker compose ps|logs|down`, que reclamam se a
 | --- | --- |
 | `RENDER_API_KEY` | chave que o bot envia em `x-api-key`; sem ela a API responde a qualquer um |
 | `PORT` | porta publicada na VPS (padrão `2828`) |
-| `RENDER_ORIGIN` | de onde o Chrome carrega a página (padrão `http://127.0.0.1:3000`, o próprio container) |
+| `RENDER_ORIGIN` | fixa de onde o Chrome carrega a página; por padrão ele descobre sozinho (`http://127.0.0.1:$PORT`) |
 | `CHROME_CHANNEL` | vazio usa o Chromium do Playwright; `chrome` usa o Chrome instalado (é o padrão no `bun dev`) |
 
 Recomendado: 1 GB de RAM e um proxy (nginx, Caddy) na frente com HTTPS.
@@ -115,5 +115,6 @@ Recomendado: 1 GB de RAM e um proxy (nginx, Caddy) na frente com HTTPS.
 ## Criando headers
 
 - `/novo` cria o header com um espaço reservado no meio e registra o pedido em `pedidos/`.
-- Um header vira modelo da API declarando `params` e `sample` em `headers/<slug>.tsx`.
+- Um header só é servido pela API com `api: true`; para receber dados por requisição, declare também `params` e `sample` em `headers/<slug>.tsx`.
+- `sizes` define as resoluções do header (padrão: só 1200×600).
 - As regras de design e o fluxo completo estão no `CLAUDE.md`.
