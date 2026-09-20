@@ -292,12 +292,15 @@ export function HeaderCreator() {
             {pending.map((h) => (
               <li key={h.slug} className="flex flex-wrap items-center justify-between gap-3 p-4">
                 <div className="flex flex-col">
-                  <span className="font-medium">{resolveHeader(h).title}</span>
+                  <span className="font-medium">{resolveHeader(h).title ?? h.slug}</span>
                   <code className="font-mono text-xs text-muted-foreground">
                     {requestPath(h.slug)}
                   </code>
                 </div>
-                <CopyButton text={claudePrompt({ slug: h.slug, title: resolveHeader(h).title })} label="Copiar pedido" />
+                <CopyButton
+                  text={claudePrompt({ slug: h.slug, title: resolveHeader(h).title ?? h.slug })}
+                  label="Copiar pedido"
+                />
               </li>
             ))}
           </ul>

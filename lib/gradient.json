@@ -1,6 +1,6 @@
 {
   "tecnologias": {
-    "palette": "aurora",
+    "palette": "mono",
     "bars": 9,
     "blur": 25,
     "peak": 98,
@@ -9,6 +9,15 @@
     "opacity": 100
   },
   "boas-vindas": {
+    "palette": "dia",
+    "bars": 9,
+    "blur": 25,
+    "peak": 98,
+    "valley": 40,
+    "height": 30,
+    "opacity": 100
+  },
+  "branding": {
     "palette": "dia",
     "bars": 9,
     "blur": 25,

@@ -125,7 +125,7 @@ export function GradientPlayground({ initialSlug }: { initialSlug?: string }) {
       setStatus(
         body.exportError
           ? { kind: "error", text: `Salvo, mas o PNG não foi exportado (rode bun run export).` }
-          : { kind: "ok", text: `Salvo e PNG exportado para “${resolveHeader(target).title}”` },
+          : { kind: "ok", text: `Salvo e PNG exportado para “${resolveHeader(target).title ?? target.slug}”` },
       );
     } finally {
       setSaving(false);
@@ -165,7 +165,7 @@ export function GradientPlayground({ initialSlug }: { initialSlug?: string }) {
             {GRADIENT_HEADERS.map((h) => (
               <TabsTrigger key={h.slug} value={h.slug}>
                 <span className="inline-flex items-center gap-2">
-                  {resolveHeader(h).title}
+                  {resolveHeader(h).title ?? h.slug}
                   {!same(drafts[h.slug], saved[h.slug]) ? (
                     <span aria-label="alterações não salvas" className="size-1.5 rounded-full bg-accent" />
                   ) : null}

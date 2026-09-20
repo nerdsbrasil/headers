@@ -1,7 +1,7 @@
 import { getHeader, HEADERS } from "@/headers";
 import { parseHeaderParams } from "@/lib/header-params";
 import { renderHeaderPng } from "@/lib/render-header";
-import { getSize, SIZES } from "@/lib/sizes";
+import { sizesFor } from "@/lib/sizes";
 
 // Public image API: GET /api/render/<slug>?<params> → PNG.
 // Example (Discord bot):
@@ -25,11 +25,13 @@ export async function GET(
 
   const { slug } = await params;
   const header = getHeader(slug);
-  if (!header || header.pending) {
+  // Só headers marcados com `api: true` são servidos; os outros existem
+  // apenas para a galeria e o export.
+  if (!header || !header.api || header.pending) {
     return Response.json(
       {
-        error: `Header "${slug}" não existe.`,
-        headers: HEADERS.filter((h) => !h.pending).map((h) => h.slug),
+        error: `Header "${slug}" não está disponível na API.`,
+        headers: HEADERS.filter((h) => h.api && !h.pending).map((h) => h.slug),
       },
       { status: 404 },
     );
@@ -38,10 +40,11 @@ export async function GET(
   const url = new URL(request.url);
   const query = Object.fromEntries(url.searchParams.entries());
 
-  const sizeId = query.size ?? SIZES[0].id;
-  if (!getSize(sizeId)) {
+  const sizes = sizesFor(header);
+  const sizeId = query.size ?? sizes[0].id;
+  if (!sizes.some((size) => size.id === sizeId)) {
     return Response.json(
-      { error: `Tamanho "${sizeId}" não existe.`, sizes: SIZES.map((s) => s.id) },
+      { error: `Tamanho "${sizeId}" não existe para esse header.`, sizes: sizes.map((s) => s.id) },
       { status: 400 },
     );
   }

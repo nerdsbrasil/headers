@@ -9,15 +9,20 @@ import {
   validateRequest,
   type HeaderRequest,
 } from "@/lib/header-request";
-import { SIZES } from "@/lib/sizes";
+import { sizesFor } from "@/lib/sizes";
 
 const ROOT = process.cwd();
 
 /** Headers and sizes for scripts/export.mjs, which skips pending ones. */
 export function GET() {
   return Response.json({
-    headers: HEADERS.map((h) => ({ slug: h.slug, title: resolveHeader(h).title, pending: !!h.pending })),
-    sizes: SIZES.map((size) => size.id),
+    headers: HEADERS.map((h) => ({
+      slug: h.slug,
+      title: resolveHeader(h).title ?? h.slug,
+      pending: !!h.pending,
+      api: !!h.api,
+      sizes: sizesFor(h).map((size) => size.id),
+    })),
   });
 }
 

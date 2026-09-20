@@ -14,8 +14,10 @@ export const BASE_HEIGHT = 540;
 export interface HeaderProps {
   width: number;
   height: number;
-  title: string;
-  button: string;
+  /** Top-left title. Omit it for a header that is only its centre. */
+  title?: string;
+  /** Bottom-left button label. Omit it for a header with no button. */
+  button?: string;
   /** Show the logo watermark in the bottom-right corner. Default true. */
   watermark?: boolean;
   /** Dia glow rising from the bottom edge, or null for none. See `gradientFor`. */
@@ -57,26 +59,30 @@ export function Header({
           />
         ) : null}
 
-        <h1
-          className="absolute top-10 left-12 leading-none font-semibold tracking-[-0.03em]"
-          // A member's name goes in the title, so long ones step down a size
-          // instead of running into the right edge.
-          style={{ fontSize: title.length > 34 ? 40 : title.length > 26 ? 46 : 52 }}
-        >
-          {title}
-        </h1>
+        {title ? (
+          <h1
+            className="absolute top-10 left-12 leading-none font-semibold tracking-[-0.03em]"
+            // A member's name goes in the title, so long ones step down a size
+            // instead of running into the right edge.
+            style={{ fontSize: title.length > 34 ? 40 : title.length > 26 ? 46 : 52 }}
+          >
+            {title}
+          </h1>
+        ) : null}
 
         <div className="absolute inset-0 grid place-items-center">
           {children}
         </div>
 
-        <div className="absolute right-12 bottom-10 left-12 flex items-center justify-between">
-          <HeaderButton label={button} />
-          {watermark ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src="/logotipo.png" alt="nerdsbrasil" className="size-[72px]" />
-          ) : null}
-        </div>
+        {button || watermark ? (
+          <div className="absolute right-12 bottom-10 left-12 flex items-center justify-between">
+            {button ? <HeaderButton label={button} /> : <span />}
+            {watermark ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="/logotipo.png" alt="nerdsbrasil" className="size-[72px]" />
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </div>
   );

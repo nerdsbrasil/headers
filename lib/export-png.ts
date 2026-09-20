@@ -2,7 +2,8 @@ import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { GradientSettings } from "@/lib/gradient";
 import { renderHeaderPng } from "@/lib/render-header";
-import { SIZES } from "@/lib/sizes";
+import { getHeader } from "@/headers";
+import { sizesFor } from "@/lib/sizes";
 
 // Dev-only PNG export used by the API routes, so saving a gradient or clicking
 // "Exportar PNG" refreshes public/exports right away. The same capture as
@@ -23,8 +24,9 @@ export async function exportHeaderPngs({
    */
   gradient?: GradientSettings;
 }) {
+  const header = getHeader(slug);
   const written: string[] = [];
-  for (const size of SIZES) {
+  for (const size of sizesFor(header ?? {})) {
     const png = await renderHeaderPng({ origin, slug, size: size.id, params, gradient });
     const dir = path.join(process.cwd(), "public", "exports", slug);
     await mkdir(dir, { recursive: true });

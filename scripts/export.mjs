@@ -57,13 +57,14 @@ try {
   // `next start` reads .env.local on its own; this script has to be told.
   const key = process.env.RENDER_API_KEY ?? envLocal("RENDER_API_KEY");
   const auth = key ? { "x-api-key": key } : undefined;
-  const { headers, sizes } = await (await fetch(`${BASE}/api/headers`, { headers: auth })).json();
+  const { headers } = await (await fetch(`${BASE}/api/headers`, { headers: auth })).json();
   for (const header of headers.filter((h) => h.pending)) {
     console.log("… pulando", header.slug, "(componente do meio pendente)");
   }
   const browser = await chromium.launch({ channel: "chrome" });
 
-  for (const { slug } of headers.filter((h) => !h.pending)) {
+  // Each header declares its own sizes.
+  for (const { slug, sizes } of headers.filter((h) => !h.pending)) {
     await mkdir(`public/exports/${slug}`, { recursive: true });
     for (const size of sizes) {
       const [width, height] = size.split("x").map(Number);

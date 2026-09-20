@@ -9,7 +9,7 @@ import { ExportButton } from "@/components/header/export-button";
 import { exportVersion } from "@/lib/export-png";
 import { exportFileName, exportUrl } from "@/lib/exports";
 import { requestPath } from "@/lib/header-request";
-import { SIZES } from "@/lib/sizes";
+import { sizesFor } from "@/lib/sizes";
 
 const PREVIEW_WIDTH = 880;
 
@@ -20,7 +20,7 @@ export default async function GalleryPage() {
   const versions = new Map(
     await Promise.all(
       HEADERS.flatMap((header) =>
-        SIZES.map(async (size) => {
+        sizesFor(header).map(async (size) => {
           const key = `${header.slug}/${size.id}`;
           return [key, await exportVersion(header.slug, size.id)] as const;
         }),
@@ -50,7 +50,7 @@ export default async function GalleryPage() {
         <section key={header.slug} className="flex flex-col gap-6">
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="inline-flex items-center gap-3 text-2xl font-semibold tracking-tight">
-              {resolved.title}
+              {resolved.title ?? header.slug}
               {header.pending ? (
                 <span className="rounded-full border border-border px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                   pendente · {requestPath(header.slug)}
@@ -66,7 +66,7 @@ export default async function GalleryPage() {
               </Link>
             ) : null}
           </div>
-          {SIZES.map((size) => (
+          {sizesFor(header).map((size) => (
             <figure key={size.id} className="flex flex-col gap-3">
               <figcaption className="flex flex-wrap items-center justify-between gap-3 text-sm">
                 <span className="flex items-baseline gap-3">

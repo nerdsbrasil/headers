@@ -40,7 +40,7 @@ GET /api/render/<header>?<params>   →  image/png
 | Autenticação | cabeçalho `x-api-key` (ou `?key=`) igual a `RENDER_API_KEY`. A chave local fica em `.env.local`, que não vai para o Git. |
 | Tamanho | `?size=1200x600` (padrão e único tamanho oficial hoje) |
 | Erros | JSON com `error`; 401 chave, 400 parâmetro inválido, 404 header inexistente |
-| Headers disponíveis | `GET /api/headers` |
+| Headers disponíveis | `GET /api/headers` (só os com `api: true` são servidos) |
 
 ### `boas-vindas`
 

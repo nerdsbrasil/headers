@@ -8,6 +8,7 @@ export const boasVindas: HeaderConfig = {
   button: "Explore a comunidade",
   watermark: true,
   gradient: true,
+  api: true,
   params: [
     { name: "username", kind: "text", description: "Nome do membro", maxLength: 24 },
     { name: "avatar", kind: "avatar", description: "URL da foto do membro no CDN do Discord" },
